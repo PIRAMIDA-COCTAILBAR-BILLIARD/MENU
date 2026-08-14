@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>PIRAMIDA — Меню</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  @font-face{ font-family:'Halvar Slanted'; src:url('fonts/HalvarBreit-ThSlanted.woff2') format('woff2'); font-weight:100; font-display:swap; }
+  @font-face{ font-family:'Halvar Slanted'; src:url('fonts/HalvarBreit-XThSlanted.woff2') format('woff2'); font-weight:200; font-display:swap; }
+  @font-face{ font-family:'Halvar Slanted'; src:url('fonts/HalvarBreit-LtSlanted.woff2') format('woff2'); font-weight:300; font-display:swap; }
+  @font-face{ font-family:'Halvar Slanted'; src:url('fonts/HalvarBreit-RgSlanted.woff2') format('woff2'); font-weight:400; font-display:swap; }
+  @font-face{ font-family:'Halvar Slanted'; src:url('fonts/HalvarBreit-MdSlanted.woff2') format('woff2'); font-weight:500; font-display:swap; }
+  @font-face{ font-family:'Halvar Slanted'; src:url('fonts/HalvarBreit-BdSlanted.woff2') format('woff2'); font-weight:700; font-display:swap; }
+  @font-face{ font-family:'Halvar Slanted'; src:url('fonts/HalvarBreit-XBdSlanted.woff2') format('woff2'); font-weight:800; font-display:swap; }
+
+  @font-face{ font-family:'Halvar Super Slanted'; src:url('fonts/HalvarBreit-ThSuSlanted.woff2') format('woff2'); font-weight:100; font-display:swap; }
+  @font-face{ font-family:'Halvar Super Slanted'; src:url('fonts/HalvarBreit-XThSuSlanted.woff2') format('woff2'); font-weight:200; font-display:swap; }
+  @font-face{ font-family:'Halvar Super Slanted'; src:url('fonts/HalvarBreit-LtSuSlanted.woff2') format('woff2'); font-weight:300; font-display:swap; }
+  @font-face{ font-family:'Halvar Super Slanted'; src:url('fonts/HalvarBreit-RgSuSlanted.woff2') format('woff2'); font-weight:400; font-display:swap; }
+  @font-face{ font-family:'Halvar Super Slanted'; src:url('fonts/HalvarBreit-MdSuSlanted.woff2') format('woff2'); font-weight:500; font-display:swap; }
+  @font-face{ font-family:'Halvar Super Slanted'; src:url('fonts/HalvarBreit-BdSuSlanted.woff2') format('woff2'); font-weight:700; font-display:swap; }
+  @font-face{ font-family:'Halvar Super Slanted'; src:url('fonts/HalvarBreit-XBdSuSlanted.woff2') format('woff2'); font-weight:800; font-display:swap; }
+  @font-face{ font-family:'Halvar Super Slanted'; src:url('fonts/HalvarBreit-BlkSuSlanted.woff2') format('woff2'); font-weight:900; font-display:swap; }
+
+  @font-face{ font-family:'Halvar'; src:url('fonts/HalvarBreit-Th.woff2') format('woff2'); font-weight:100; font-display:swap; }
+  @font-face{ font-family:'Halvar'; src:url('fonts/HalvarBreit-XTh.woff2') format('woff2'); font-weight:200; font-display:swap; }
+  @font-face{ font-family:'Halvar'; src:url('fonts/HalvarBreit-Lt.woff2') format('woff2'); font-weight:300; font-display:swap; }
+  @font-face{ font-family:'Halvar'; src:url('fonts/HalvarBreit-Bd.woff2') format('woff2'); font-weight:700; font-display:swap; }
+</style>
+<style>
+  :root{
+    --bg:#080808;
+    --bg2:#0f0f0f;
+    --ink:#f2f2f0;
+    --ink-dim:#9a9a96;
+    --line: rgba(255,255,255,.14);
+    --glass-a: rgba(255,255,255,.10);
+    --glass-b: rgba(255,255,255,.02);
+    --radius: 22px;
+    --nav-h: 66px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; scroll-padding-top: calc(var(--nav-h) + 58px);}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Manrope', sans-serif; -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+  }
+
+  h1,h2,h3, .display{ font-family:'Halvar Slanted', sans-serif; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  a{color:inherit;}
+
+  /* ---------- background liquid field ---------- */
+  .liquid-field{
+    position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+    background: radial-gradient(120% 90% at 50% -10%, #151515 0%, var(--bg) 55%);
+  }
+  .liquid-field svg{ position:absolute; width:0; height:0; }
+  .blobs{
+    position:absolute; inset:0;
+    filter: url(#goo) blur(2px);
+    opacity:.5;
+  }
+  .blob{
+    position:absolute; border-radius:50%;
+    background: radial-gradient(circle at 32% 28%, rgba(255,255,255,.95), rgba(255,255,255,.35) 40%, rgba(255,255,255,0) 72%);
+    mix-blend-mode: screen;
+  }
+  .blob.wob1{ animation: drift1 24s ease-in-out infinite; }
+  .blob.wob2{ animation: drift2 30s ease-in-out infinite; }
+  .blob.wob3{ animation: drift3 20s ease-in-out infinite reverse; }
+  @keyframes drift1{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.18);} }
+  @keyframes drift2{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(.85);} }
+  @keyframes drift3{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.1);} }
+
+  .grain{
+    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .linework{
+    position:fixed; inset:0; z-index:1; pointer-events:none;
+    opacity:.055; mix-blend-mode:overlay;
+    background-repeat:repeat; background-size:280px 280px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Cg stroke='white' stroke-width='1.3' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg transform='translate(24,26) rotate(-8)'%3E%3Cpath d='M0 0 L32 0 L16 24 Z'/%3E%3Cline x1='16' y1='24' x2='16' y2='44'/%3E%3Cline x1='6' y1='44' x2='26' y2='44'/%3E%3C/g%3E%3Cg transform='translate(140,34) rotate(6)'%3E%3Cpath d='M8 0 C8 15 26 15 26 0'/%3E%3Cpath d='M8 0 L26 0'/%3E%3Cline x1='17' y1='15' x2='17' y2='38'/%3E%3Cline x1='8' y1='38' x2='26' y2='38'/%3E%3C/g%3E%3Cg transform='translate(210,100) rotate(-4)'%3E%3Crect x='6' y='16' width='16' height='38' rx='3'/%3E%3Crect x='11' y='4' width='6' height='14'/%3E%3Cline x1='6' y1='30' x2='22' y2='30'/%3E%3C/g%3E%3Cg transform='translate(44,158) rotate(10)'%3E%3Ccircle cx='16' cy='16' r='14'/%3E%3Ccircle cx='16' cy='16' r='5'/%3E%3Cline x1='34' y1='46' x2='84' y2='84'/%3E%3C/g%3E%3Cg transform='translate(168,190) rotate(-5)'%3E%3Cpath d='M0 6 H30 L27 34 A3 3 0 0 1 24 37 H6 A3 3 0 0 1 3 34 Z'/%3E%3Cpath d='M30 11 h7 a6 6 0 0 1 0 12 h-6'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* ---------- glass primitive ---------- */
+  .glass{
+    position:relative;
+    background: linear-gradient(155deg, var(--glass-a), var(--glass-b));
+    border:1px solid var(--line);
+    border-radius: var(--radius);
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+    box-shadow: 0 1px 0 rgba(255,255,255,.18) inset, 0 20px 40px -20px rgba(0,0,0,.7);
+    overflow:hidden;
+  }
+  .glass::before{
+    content:"";
+    position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    background: radial-gradient(320px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,.16), transparent 60%);
+    opacity:0; transition:opacity .4s ease;
+  }
+  .glass:hover::before{ opacity:1; }
+
+  /* ---------- nav ---------- */
+  header{
+    position:sticky; top:0; z-index:30; height:var(--nav-h);
+    display:flex; align-items:center; justify-content:center;
+    padding:0 clamp(16px,4vw,40px);
+    background: rgba(8,8,8,.55);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border-bottom:1px solid var(--line);
+  }
+  .logo{ font-size:15px; letter-spacing:.28em; font-weight:800; }
+  .tabs{
+    display:flex; gap:4px; padding:4px; border-radius:999px;
+    background:var(--glass-b); border:1px solid var(--line);
+    max-width:100%; overflow-x:auto; scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{ display:none; }
+  .tab-btn{
+    flex:none; white-space:nowrap;
+    border:none; background:transparent; color:var(--ink-dim);
+    font-family:'Manrope'; font-weight:600; font-size:13px; letter-spacing:.01em;
+    padding:9px 15px; border-radius:999px; cursor:pointer; transition:.35s ease;
+    position:relative;
+  }
+  .tab-btn.active{ color:#0a0a0a; background:var(--ink); box-shadow:0 4px 14px rgba(0,0,0,.35); }
+  .hdr-actions{ display:flex; align-items:center; gap:10px; }
+  .icon-btn{
+    width:38px; height:38px; border-radius:50%; border:1px solid var(--line);
+    background:var(--glass-b); color:var(--ink); cursor:pointer; display:grid; place-items:center;
+    transition:.25s ease;
+  }
+  .icon-btn:hover{ background:var(--ink); color:#0a0a0a; transform:scale(1.06); }
+
+  .search-wrap{
+    position:sticky; top:var(--nav-h); z-index:29; padding:10px clamp(16px,4vw,40px) 0;
+    background:linear-gradient(rgba(8,8,8,.7), rgba(8,8,8,0));
+  }
+  .search-box{
+    max-width:640px; margin:0 auto; display:flex; align-items:center; gap:10px;
+    padding:10px 16px; border-radius:16px; height:0; opacity:0; overflow:hidden;
+    transition:.3s ease;
+  }
+  .search-box.open{ height:48px; opacity:1; padding:10px 16px; margin-bottom:10px;}
+  .search-box input{
+    flex:1; background:transparent; border:none; outline:none; color:var(--ink);
+    font-family:'Manrope'; font-size:14px;
+  }
+  .search-box input::placeholder{ color:var(--ink-dim); }
+
+  /* category sub-nav */
+  .catnav{
+    position:sticky; top:var(--nav-h); z-index:28;
+    display:flex; gap:8px; overflow-x:auto; padding:14px clamp(16px,4vw,40px);
+    background:linear-gradient(rgba(8,8,8,.75), rgba(8,8,8,.2));
+    backdrop-filter:blur(10px);
+    scrollbar-width:none;
+  }
+  .catnav::-webkit-scrollbar{ display:none; }
+  .cat-pill{
+    flex:none; white-space:nowrap; font-size:12.5px; font-weight:600; letter-spacing:.02em;
+    padding:8px 15px; border-radius:999px; border:1px solid var(--line); color:var(--ink-dim);
+    background:var(--glass-b); cursor:pointer; transition:.25s ease;
+  }
+  .cat-pill.active, .cat-pill:hover{ color:#0a0a0a; background:var(--ink); border-color:var(--ink); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; z-index:2; min-height:88vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center; padding:40px 20px;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono'; font-size:clamp(13px,3.4vw,16px); letter-spacing:.34em; color:var(--ink-dim);
+    text-transform:uppercase; margin-bottom:clamp(14px,3.4vw,22px); opacity:0; animation:rise .9s .1s ease forwards;
+  }
+  .hero h1{
+    font-family:'Manrope', sans-serif;
+    font-size:clamp(48px, 15vw, 148px); line-height:.92; font-weight:800; margin:0;
+    letter-spacing:-.01em;
+    background:linear-gradient(180deg,#fff, #b9b9b6 78%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    opacity:0; animation:rise 1s .25s ease forwards;
+  }
+  .hero .sub{
+    margin-top:clamp(14px,3.6vw,22px); font-size:clamp(11px,2.8vw,14px); letter-spacing:.18em; color:var(--ink-dim);
+    text-transform:uppercase; opacity:0; animation:rise .9s .5s ease forwards; white-space:nowrap;
+  }
+  @media(max-width:420px){
+    .hero .sub{ letter-spacing:.1em; }
+  }
+  @keyframes rise{ from{ opacity:0; transform:translateY(22px);} to{opacity:1; transform:translateY(0);} }
+
+  .scroll-cta{
+    margin-top:52px; display:flex; flex-direction:column; align-items:center; gap:10px;
+    background:none; border:none; color:var(--ink-dim); cursor:pointer; font-family:'Manrope'; font-size:12px;
+    letter-spacing:.14em; text-transform:uppercase; opacity:0; animation:rise .9s .75s ease forwards;
+  }
+  .scroll-cta .chevron{
+    width:30px; height:30px; border-radius:50%; border:1px solid var(--line); display:grid; place-items:center;
+    animation:bob 2.2s ease-in-out infinite;
+  }
+  @keyframes bob{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(6px);} }
+
+  /* ---------- content ---------- */
+  main{ position:relative; z-index:2; max-width:1180px; margin:0 auto; padding:10px clamp(16px,4vw,40px) 100px; }
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  section.cat{ margin-top:64px; scroll-margin-top: calc(var(--nav-h) + 118px); }
+  section.cat h2{
+    font-size:clamp(28px,4.6vw,40px); font-weight:800; margin:0 0 4px;
+  }
+  .cat-count{ font-family:'JetBrains Mono'; font-size:13px; color:var(--ink-dim); }
+  .cat-divider{ height:1px; background:var(--line); margin:16px 0 26px; }
+
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(310px,1fr)); gap:14px;
+  }
+  .item{
+    padding:18px 20px; opacity:0; transform:translateY(18px);
+    transition:opacity .6s ease, transform .6s ease;
+    background: linear-gradient(155deg, rgba(255,255,255,.07), rgba(255,255,255,.015));
+    border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow: 0 1px 0 rgba(255,255,255,.12) inset, 0 14px 26px -18px rgba(0,0,0,.6);
+  }
+  .item.in-view{ opacity:1; transform:translateY(0); }
+  .item-top{ display:flex; justify-content:space-between; align-items:baseline; gap:14px; }
+  .item-name{ font-weight:700; font-size:19px; letter-spacing:.01em; }
+  .item-price{ font-family:'JetBrains Mono'; font-size:17px; white-space:nowrap; color:var(--ink); }
+  .item-desc{ margin-top:7px; font-size:14px; line-height:1.55; color:var(--ink-dim); }
+  .item:hover{ transform:translateY(-4px); }
+  .item:hover .item-name{ text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:4px; }
+
+  .empty-state{ text-align:center; padding:80px 20px; color:var(--ink-dim); font-family:'JetBrains Mono'; font-size:13px; }
+
+  footer{
+    position:relative; z-index:2; border-top:1px solid var(--line); padding:34px clamp(16px,4vw,40px);
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+  }
+  footer .logo{ opacity:.8; }
+  footer .tag{ font-family:'JetBrains Mono'; font-size:11px; letter-spacing:.18em; color:var(--ink-dim); text-transform:uppercase; }
+
+  .top-btn{
+    position:fixed; right:20px; bottom:20px; z-index:40; width:46px; height:46px; border-radius:50%;
+    display:grid; place-items:center; cursor:pointer; opacity:0; pointer-events:none; transform:translateY(10px);
+    transition:.3s ease;
+  }
+  .top-btn.show{ opacity:1; pointer-events:auto; transform:translateY(0); }
+  .top-btn:hover{ background:var(--ink); color:#0a0a0a; }
+
+  .blob-wrap{ position:absolute; inset:0; will-change:transform; }
+
+  /* ---------- add to cart controls ---------- */
+  .item-controls{ margin-top:12px; display:flex; justify-content:flex-end; min-height:34px; }
+  .add-btn{
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:var(--glass-b);
+    color:var(--ink); cursor:pointer; font-size:16px; line-height:1; display:grid; place-items:center; transition:.25s ease;
+  }
+  .add-btn:hover{ background:var(--ink); color:#0a0a0a; transform:scale(1.08); }
+  .stepper{
+    display:flex; align-items:center; gap:10px; padding:5px 8px; border-radius:999px;
+    border:1px solid var(--line); background:var(--glass-b); animation:popIn .3s ease;
+  }
+  @keyframes popIn{ from{ opacity:0; transform:scale(.82);} to{ opacity:1; transform:scale(1);} }
+  .stepper button{
+    width:24px; height:24px; border-radius:50%; border:none; background:transparent; color:var(--ink);
+    cursor:pointer; font-size:16px; line-height:1; display:grid; place-items:center; transition:.2s ease;
+  }
+  .stepper button:hover{ background:var(--line); }
+  .stepper .qty{ min-width:16px; text-align:center; font-size:13px; }
+
+  /* ---------- cart fab ---------- */
+  .cart-fab{
+    position:fixed; left:20px; bottom:20px; z-index:40; height:50px; padding:0 18px 0 16px;
+    border-radius:999px; display:flex; align-items:center; gap:10px; cursor:pointer; transition:.3s ease;
+  }
+  .cart-fab:hover{ background:var(--ink); color:#0a0a0a; }
+  .cart-fab .badge{
+    background:var(--ink); color:#0a0a0a; font-size:11px; font-weight:700;
+    min-width:20px; height:20px; border-radius:999px; display:grid; place-items:center; padding:0 5px; transition:.2s ease;
+  }
+  .cart-fab:hover .badge{ background:#0a0a0a; color:var(--ink); }
+  .cart-fab.pulse .badge{ animation: pulseBadge .4s ease; }
+  @keyframes pulseBadge{ 0%{transform:scale(1);} 50%{transform:scale(1.4);} 100%{transform:scale(1);} }
+
+  /* ---------- cart overlay + panel ---------- */
+  .cart-overlay{
+    position:fixed; inset:0; z-index:50; background:rgba(0,0,0,.55); backdrop-filter:blur(4px);
+    opacity:0; pointer-events:none; transition:.35s ease;
+  }
+  .cart-overlay.open{ opacity:1; pointer-events:auto; }
+  .cart-panel{
+    position:fixed; top:0; right:0; height:100%; width:min(420px,92vw); z-index:51;
+    transform:translateX(105%); transition:transform .5s cubic-bezier(.16,1,.3,1);
+    display:flex; flex-direction:column;
+    background:linear-gradient(155deg, rgba(255,255,255,.13), rgba(255,255,255,.015));
+    backdrop-filter: blur(30px) saturate(160%); -webkit-backdrop-filter: blur(30px) saturate(160%);
+    border-left:1px solid var(--line); box-shadow:-24px 0 70px rgba(0,0,0,.6);
+  }
+  .cart-panel.open{ transform:translateX(0); }
+  .cart-panel::after{
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:.6;
+    background: conic-gradient(from var(--ang,0deg) at 50% 0%, transparent 0deg, rgba(255,255,255,.4) 30deg, transparent 70deg);
+    animation: rotateShimmer 7s linear infinite;
+  }
+  @keyframes rotateShimmer{ to{ --ang:360deg; } }
+  .cart-head{ position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; padding:22px 22px 16px; border-bottom:1px solid var(--line); }
+  .cart-head h3{ margin:0; font-size:20px; }
+  .cart-close{ width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:transparent; color:var(--ink); cursor:pointer; display:grid; place-items:center; }
+  .cart-close:hover{ background:var(--ink); color:#0a0a0a; }
+  .cart-notice{
+    position:relative; z-index:1; display:flex; align-items:flex-start; gap:10px;
+    margin:14px 22px 0; padding:12px 14px; border-radius:14px;
+    background:rgba(255,70,70,.08); border:1px dashed rgba(255,90,90,.45);
+    color:#ff6b6b; font-size:12.5px; font-weight:600; line-height:1.5; cursor:default; user-select:none;
+  }
+  .cart-notice svg{ flex:none; margin-top:1px; opacity:.9; color:#ff6b6b; }
+  .cart-items{ position:relative; z-index:1; flex:1; overflow-y:auto; padding:16px 22px; display:flex; flex-direction:column; gap:12px; }
+  .cart-row{
+    display:flex; justify-content:space-between; align-items:center; gap:12px; padding:14px;
+    border-radius:16px; border:1px solid var(--line); background:rgba(255,255,255,.05); animation:slideIn .35s ease;
+  }
+  @keyframes slideIn{ from{ opacity:0; transform:translateX(18px);} to{ opacity:1; transform:translateX(0);} }
+  .cart-row-info{ flex:1; min-width:0; }
+  .cart-row-name{ font-weight:700; font-size:13.5px; }
+  .cart-row-price{ font-size:12px; color:var(--ink-dim); margin-top:4px; }
+  .cart-row-actions{ display:flex; flex-direction:column; align-items:flex-end; gap:7px; }
+  .cart-remove{ background:none; border:none; color:var(--ink-dim); cursor:pointer; font-size:11px; text-decoration:underline; padding:0; }
+  .cart-remove:hover{ color:var(--ink); }
+  .cart-empty{ text-align:center; color:var(--ink-dim); font-size:12.5px; padding:70px 14px; }
+  .cart-foot{ position:relative; z-index:1; padding:18px 22px 24px; border-top:1px solid var(--line); }
+  .cart-total-row{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; }
+  .cart-total-row .label{ font-size:12px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.14em; }
+  .cart-total-row .value{ font-size:26px; font-weight:600; }
+  .cart-clear{
+    width:100%; padding:13px; border-radius:14px; border:1px solid var(--line); background:transparent; color:var(--ink);
+    font-family:'Manrope'; font-weight:600; font-size:13px; letter-spacing:.03em; cursor:pointer; transition:.25s ease;
+  }
+  .cart-clear:hover{ background:var(--ink); color:#0a0a0a; }
+
+  @media(max-width:640px){
+    .cart-fab{ bottom:78px; }
+    .tabs{
+      position:fixed; left:12px; right:12px; bottom:14px; z-index:35;
+      justify-content:flex-start; box-shadow:0 10px 30px rgba(0,0,0,.5);
+    }
+    .tab-btn{ flex:none; text-align:center; font-size:12.5px; padding:9px 13px; }
+    header{ padding:0 16px; }
+    .logo{ font-size:13px; }
+    main{ padding-bottom:130px; }
+  }
+  @media(max-width:380px){
+    .tab-btn{ font-size:11.5px; padding:8px 11px; letter-spacing:0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="liquid-field">
+  <svg><defs><filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="18" result="b"/><feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -10" /></filter></defs></svg>
+  <div class="blobs" id="blobs"></div>
+</div>
+<div class="grain"></div>
+<div class="linework"></div>
+
+<header>
+  <div class="tabs" id="tabs"></div>
+</header>
+
+
+<div class="catnav" id="catnav"></div>
+
+<section class="hero">
+  <div class="eyebrow">Menu</div>
+  <h1 class="display">PIRAMIDA</h1>
+  <div class="sub">Cocktail · Bar · Billiards</div>
+  <button class="scroll-cta" id="scrollCta">
+    Гортати меню
+    <span class="chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  </button>
+</section>
+
+<main id="main"></main>
+
+<footer>
+  <div class="logo">PIRAMIDA</div>
+  <div class="tag">Cocktail · Bar · Billiards</div>
+</footer>
+
+<button class="top-btn glass" id="topBtn" aria-label="Нагору">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 15l-6-6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<button class="cart-fab glass" id="cartFab" aria-label="Кошик">
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L22 8H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="21" r="1.4" fill="currentColor"/><circle cx="18" cy="21" r="1.4" fill="currentColor"/></svg>
+  <span class="badge mono">0</span>
+</button>
+
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-panel" id="cartPanel">
+  <div class="cart-head">
+    <h3 class="display">Кошик</h3>
+    <button class="cart-close" id="cartClose" aria-label="Закрити">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div class="cart-notice">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c0-3.87 3.13-7 7-7s7 3.13 7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <span>Це попередній список — щоб оформити замовлення, покажіть кошик офіціанту</span>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot">
+    <div class="cart-total-row">
+      <span class="label">Разом</span>
+      <span class="value mono" id="cartTotalValue">0 ₴</span>
+    </div>
+    <button class="cart-clear" id="cartClearBtn">Очистити кошик</button>
+  </div>
+</aside>
+
+<script>
+/* ================= DATA ================= */
+const DATA = {
+kitchen: { label:"Кухня", cats:[
+  {id:"cold-snacks", name:"Холодні закуски", items:[
+    {n:"М'ясне асорті", d:"Салямі, папероні, хамон, пастрома, балик, фует", p:"950"},
+    {n:"М'ясна тарілка", d:"Салямі, київська, ковбаса домашня, язик яловичий", p:"450"},
+    {n:"Асорті з сала", d:"Підчеревок солений, підчеревок із копченою паприкою, підчеревок із перцем чілі, хліб бородинський, гірчиця, хрін", p:"430"},
+    {n:"Український сет", d:"Сало, корнішони, маринована цибуля, часник, гірчиця", p:"305"},
+    {n:"Сирна тарілка", d:"Сир Камамбер, сир з горіхами, сир Мааздам, сир Дор блю, мед", p:"550"},
+    {n:"Овочева тарілка", d:"Помідор, огірок, перець болгарський, петрушка, маслини", p:"300"},
+    {n:"Сет закусок", d:"Оселедець, картопля, різносоли, маринована цибуля", p:"350"},
+    {n:"Сет різносолів", d:"Мариновані помідори, мариновані печериці, корнішони, квашена капуста, маринована цибуля", p:"250"},
+    {n:"Фруктова тарілка", d:"Апельсин, груша, яблуко, лимон", p:"350"},
+  ]},
+  {id:"salads", name:"Салати", items:[
+    {n:"Весняний", d:"Капуста, цибуля синя, огірок, зелень, оливкова олія/майонез", p:"110"},
+    {n:"Грецький", d:"Огірок, помідор, перець болгарський, сир Фета, маслини, оливкова олія", p:"200"},
+    {n:"Овочевий", d:"Помідор, огірок, цибуля синя, соняшникова олія", p:"130"},
+    {n:"Цезар із куркою", d:"Салат, соус цезар, черрі, яйця перепелині, філе куряче, сир Пармезан, сухарики", p:"280"},
+    {n:"Цезар із креветками", d:"Салат, соус цезар, черрі, яйця перепелині, креветки, сир Пармезан, сухарики", p:"350"},
+    {n:"Цезар із лососем", d:"Салат, соус цезар, черрі, яйця перепелині, лосось, сир Пармезан, сухарики", p:"380"},
+    {n:"Із серця", d:"Серце свинини, морква по-корейськи, перець болгарський, черрі, маслини, соняшникова олія", p:"240"},
+    {n:"Із яловичиною", d:"Яловичина, черрі, перець болгарський, мікс зелені, огірок, цибуля, оливкова олія", p:"370"},
+    {n:"Із лососем та авокадо", d:"Лосось, авокадо, черрі, огірок, мікс зелені, рукола, оливкова олія", p:"430"},
+    {n:"Теплий зі свининою", d:"Свинина, перець болгарський, черрі, сир Моцарела, соус томатний", p:"225"},
+    {n:"Мисливський", d:"Ковбаски, черрі, корнішони, яйце куряче, сир твердий, майонез", p:"210"},
+    {n:"Тропічний", d:"Крабові палички, сир твердий, перець болгарський, кукурудза, ананас, маслини, майонез", p:"250"},
+  ]},
+  {id:"soups", name:"Супи", items:[
+    {n:"Борщ із салом", d:"Свинина, буряк, морква, картопля, цибуля, сало, зелена цибуля, сметана, хрін, хліб", p:"220"},
+    {n:"Бульйон із куркою", d:"Куряче філе, картопля, цибуля, морква, зелень, хліб", p:"125"},
+    {n:"Бульйон із куркою та локшиною", d:"Локшина, куряче філе, картопля, цибуля, морква, зелень, хліб", p:"130"},
+    {n:"Бульйон із фрикадельками", d:"Фрикадельки зі свинини, картопля, цибуля, морква, зелень, хліб", p:"120"},
+    {n:"Крем-суп грибний", d:"Печериці, крем-сир, картопля, цибуля, вершки", p:"150"},
+    {n:"Крем-суп сирний", d:"Крем-сир, картопля, морква, цибуля, вершки", p:"125"},
+    {n:"Солянка", d:"Яловичина, свинина, куряче філе, копчене філе, ковбаски, бекон, мариновані огірки, маслини, хліб", p:"210"},
+    {n:"Окрошка з ковбасою", d:"Ковбаса, картопля, огірок, яйце, цибуля зелена, оцет, хліб", p:"150"},
+    {n:"Окрошка з куркою", d:"Філе куряче, картопля, огірок, яйце, цибуля зелена, оцет, хліб", p:"160"},
+  ]},
+  {id:"pizza", name:"Піци Ø36", items:[
+    {n:"Маргарита", d:"Соус томатний, черрі, сир Моцарела, сир Пармезан, рукола", p:"300"},
+    {n:"Гавайська", d:"Соус вершковий, куряче філе, ананас, сир Моцарела, сир Пармезан", p:"420"},
+    {n:"Карбонара", d:"Соус вершковий, бекон, жовток, сир Моцарела, сир Пармезан", p:"400"},
+    {n:"Салямі", d:"Соус томатний, салямі, черрі, болгарський перець, сир Моцарела, сир Пармезан, маслини, рукола", p:"430"},
+    {n:"Яловичина та томати", d:"Соус вершковий, яловичина, черрі, сир Чеддер, сир Моцарела, рукола", p:"480"},
+    {n:"4 сира, груша та волоський горіх", d:"Соус вершковий, сир Чеддер, сир Дор блю, сир Моцарела, груша, волоський горіх", p:"480"},
+    {n:"5 сирів", d:"Соус вершковий, сир Чеддер, сир Дор блю, сир Моцарела, сир Бринза, сир Пармезан", p:"460"},
+  ]},
+  {id:"hot-dishes", name:"Гарячі страви", items:[
+    {n:"Деруни зі сметаною", p:"150"},
+    {n:"Омлет із грибами", p:"90"}, {n:"Омлет із моцарелою", p:"120"},
+    {n:"Яєчня з беконом та зеленню", d:"Яєчня, бекон, черрі, зелень, тости", p:"190"},
+    {n:"Бефстроганів", d:"Яловичина в сметанному соусі", p:"365"},
+    {n:"Курячі відбивні", d:"Куряче філе, рукола, черрі, оливки, соус кисло-солодкий", p:"195"},
+    {n:"Куряча відбивна з ананасами та сиром", d:"Куряче філе з ананасом затерте сиром", p:"200"},
+    {n:"Куряча відбивна з помідорами та сиром", d:"Куряче філе з помідорами затерте сиром", p:"185"},
+    {n:"Свинячі відбивні", d:"Свинина, рукола, черрі, оливки, кетчуп", p:"215"},
+    {n:"М'ясо по-французьки", d:"Свинина з печерицями затерта сиром", p:"250"},
+    {n:"Домашня ковбаса з картоплею", d:"Домашня ковбаса, картопля, помідор, гірчиця, хрін, зелень", p:"370"},
+    {n:"Жульєн", d:"Куряче філе, печериці, цибуля, сир Чеддер, сир Пармезан, вершки", p:"215"},
+    {n:"Картопля смажена з салом та цибулею", d:"Картопля, сало, цибуля", p:"140"},
+    {n:"Куряча грудинка з картоплею у вершковому соусі", d:"Картопля по-селянськи, куряче філе у вершковому соусі", p:"320"},
+    {n:"Реберця", d:"Свинячі ребра із гранатовим соусом", p:"375"},
+    {n:"Стейк з овочами на грилі", d:"Стейк зі свинини, помідор, перець болгарський, печериці, соус гранатовий", p:"460"},
+    {n:"Стейк із лосося (за 100 г)", d:"Лосось, спеції, трави, лимон", p:"255"},
+    {n:"Чілі м'ясо", d:"Картопля фрі, яловичина, бекон, куряче філе, цибуля, сир Чеддер, соус вершковий, перець чілі", p:"295"},
+  ]},
+  {id:"potato-pan", name:"Картопля на сковорідці", items:[
+    {n:"З куркою, овочами та печерицями у вершковому соусі", p:"280"},
+    {n:"Зі свининою, овочами та печерицями у сметанному соусі", p:"330"},
+  ]},
+  {id:"pasta", name:"Пасти", items:[
+    {n:"Карбонара", d:"Спагеті, вершки, жовток, бекон, сир Пармезан", p:"255"},
+    {n:"Паста з креветками", d:"Спагеті, креветки, черрі, сир Пармезан, вершки", p:"315"},
+  ]},
+  {id:"hot-snacks", name:"Гарячі закуски", items:[
+    {n:"Картопляні кульки", p:"90"}, {n:"Картопля по-селянськи", p:"100"},
+    {n:"Картопля фрі", p:"90"}, {n:"Крильця", p:"160"},
+    {n:"Курячі нагетси", p:"120"}, {n:"Сирні палички", p:"150"},
+    {n:"Цибулеві кільця", p:"100"}, {n:"Кільця кальмара в клярі", p:"170"},
+    {n:"Креветки в клярі", p:"250"}, {n:"Мідії в клярі", p:"180"},
+  ]},
+  {id:"burgers", name:"Гамбургери", items:[
+    {n:"Гамбургер з яловичиною", d:"Яловича котлета, соус BBQ, гірчиця, огірок солоний, помідор, сир Чеддер, цибуля", p:"280"},
+    {n:"Гамбургер з яловичиною + фрі", p:"350"},
+    {n:"Гамбургер з куркою", d:"Хрустка курочка, соус BBQ, гірчиця, огірок солоний, помідор, сир Чеддер, цибуля", p:"250"},
+    {n:"Гамбургер з куркою + фрі", p:"320"},
+  ]},
+  {id:"beer-sets", name:"Сети до пива", items:[
+    {n:"Гарячий набір", d:"Курячі крильця, картопля фрі, сирні палочки, соус сирний, соус журавлиний", p:"405"},
+    {n:"Пивний сет", d:"Курочка сушена, кабаноси, сухарики, горішки, кукурудза, арахіс в паніровці", p:"340"},
+    {n:"Сет Дублін", d:"Цибулеві кільця, сирні палочки, картопляні кульки, соус сирний, соус часниковий", p:"310"},
+    {n:"Сет Фрі", d:"Цибулеві кільця, картопля фрі, курячі нагетси, соус сирний, соус кисло-солодкий, соус BBQ", p:"305"},
+    {n:"Сет із морепродуктів", d:"Креветки в клярі, мідії в клярі, кільця кальмара в клярі, соус часниковий, соус кисло-солодкий", p:"640"},
+    {n:"Хрусткий набір", d:"Чіпси, сухарики із часником, арахіс, соус часниковий, соус сирний", p:"290"},
+    {n:"Арахіс в паніровці", p:"70"}, {n:"Горішки", p:"80"}, {n:"Кабаноси", p:"100"},
+    {n:"Кукурудза", p:"65"}, {n:"Сухарики", p:"75"}, {n:"Сушена курочка", p:"105"},
+    {n:"Фісташки", p:"95"}, {n:"Чіпси", p:"80"},
+  ]},
+  {id:"sauces", name:"Соуси (40г)", items:[
+    {n:"Соус BBQ", p:"40"}, {n:"Соус кисло-солодкий", p:"40"}, {n:"Соус гранатовий", p:"40"},
+    {n:"Соус сирний", p:"40"}, {n:"Соус часниковий", p:"40"}, {n:"Соус журавлиний", p:"40"},
+    {n:"Соус шрірача", p:"40"}, {n:"Кетчуп", p:"40"}, {n:"Гірчиця", p:"40"}, {n:"Оцет", p:"35"},
+  ]},
+  {id:"desserts", name:"Десерти", items:[
+    {n:"Сирники з фруктами", d:"Сирники, фрукти в асортименті, джем, сметана", p:"205"},
+    {n:"Штрудель із яблуком та грушею", p:"170"},
+    {n:"Штрудель із вишнею", p:"170"},
+    {n:"Морозиво (в асортименті)", d:"Горішки +15 грн · Топінг +10 грн · Шоколад +20 грн", p:"125"},
+  ]},
+]},
+
+bar: { label:"Бар", cats:[
+  {id:"cocktails", name:"Коктейлі", items:[
+    {n:"A'pple Wood", d:"Яблучний віскі, тонік, гренадін", p:"220"},
+    {n:"Caramel Grace", d:"Віскі, лікер Бейліз, сироп солоної карамелі, молоко", p:"275"},
+    {n:"Cherry Bourbon", d:"Віскі, ягоди вишні, лимонний фреш, цукровий сироп, содова", p:"240"},
+    {n:"Popcorn Sour", d:"Віскі, горіховий лікер, сироп попкорну, лимонний фреш, білок", p:"225"},
+    {n:"Whisky Sour", d:"Віскі, лимонний фреш, цукровий сироп, білок, біттер", p:"220"},
+    {n:"Bubble Gum", d:"Горілка, сироп жувальної гумки, гранатовий сік, фреш лайма", p:"210"},
+    {n:"Ma'ona", d:"Горілка, динний лікер, апельсиновий сік, лимонний фреш, спрайт", p:"215"},
+    {n:"Pear Garden", d:"Горілка, сироп груші, яблучний сік, лимонний фреш", p:"210"},
+    {n:"Pornstar Martini", d:"Ванільна горілка, сироп ваніль, сироп маракуї, пюре маракуї, білок, просекко", p:"230"},
+    {n:"Tequila Sunrise", d:"Текіла, апельсиновий сік, сироп гренадін", p:"215"},
+    {n:"Aperol Spritz", d:"Апероль, просекко, содова", p:"235"},
+    {n:"Coco Monkey", d:"Кокосовий ром, лікер зелена диня, лікер банан, ананасовий сік, фреш лайма", p:"270"},
+    {n:"Mai Tai", d:"Ром білий, ром темний, сироп мигдалевий, ананасовий сік, фреш лайма", p:"255"},
+    {n:"Pina Colada", d:"Ром, ананасовий кордіал, кокосовий лікер", p:"265"},
+    {n:"Apple Tini Sour", d:"Джин, яблучний лікер, яблучний сік, лимонний фреш, цукровий сироп, білок", p:"225"},
+    {n:"Bramble", d:"Джин, лікер крем де касіс, вермут, ожино-лаймовий кордіал, огірок", p:"215"},
+    {n:"Clover Club", d:"Джин, цукровий сироп, ягідний сироп, лимонний сік, білок", p:"210"},
+    {n:"Hugo", d:"Малиновий джин, просекко, лимонний сік, бузковий сироп, м'ята", p:"190"},
+    {n:"Ruby Negroni", d:"Джин настояний на малині, біттер, вермут, вишневий лікер", p:"230"},
+    {n:"Tropical Sunrise", d:"Джин, лікер блю кюрасао, фреш апельсину, пюре маракуї, цукровий сироп, спрайт", p:"260"},
+    {n:"Lavender Coconut Lemonade", d:"Лікер малібу, лавандовий сироп, ягоди журавлини, лимонний сік, содова", p:"220"},
+    {n:"Malibu Sunset", d:"Малібу, апельсиновий сік, ананасовий сік, сироп гренадін", p:"250"},
+    {n:"Long Island", d:"Джин, ром, горілка, текіла, лікер тріпл сек, кока-кола", p:"240"},
+  ]},
+  {id:"shots", name:"Шоти", items:[
+    {n:"Б-52", d:"Кавовий лікер, лікер Бейліз, лікер тріпл сек", p:"135"},
+    {n:"Б-53", d:"Кавовий лікер, лікер Бейліз, абсент", p:"155"},
+    {n:"БМВ", d:"Лікер Бейліз, лікер Малібу, віскі", p:"150"},
+    {n:"Баскетбол", d:"Абсент, сироп гренадін, лікер тріпл сек", p:"160"},
+    {n:"Дядя Ваня", d:"Горілка, лимонний сік, сироп гренадін", p:"100"},
+    {n:"Електроліт", d:"Самбука, єгермейстр, абсент", p:"145"},
+    {n:"Єгермонстр", d:"Єгермейстер, апельсиновий сік, сироп гренадін", p:"140"},
+    {n:"Зелений мексиканець", d:"Лікер зелена диня, текіла, лимонний сік", p:"110"},
+    {n:"Крим", d:"Горілка, апельсиновий сік, сироп блю кюрасао", p:"100"},
+    {n:"Медуза", d:"Ром, кокосовий лікер, лікер тріпл сек, лікер Бейліс, лікер блю кюрасао", p:"135"},
+    {n:"Скажена собака", d:"Лікер Бейліз, єгермейстр", p:"160"},
+    {n:"Хіросіма", d:"Самбука, абсент, лікер Бейліс, сироп гренадін", p:"160"},
+    {n:"Французький поцілунок", d:"Текіла, лікер Бейліз, сироп гренадін", p:"140"},
+  ]},
+  {id:"bar-sets", name:"Сети", items:[
+    {n:"Сет настоянок", d:"Малина, абрикос, смородина, обліпиха, лимон, вишня, апельсин, ожина, журавлина", p:"500"},
+    {n:"Сет №1", d:"Дядя Ваня, Єгермонстр, Хіросіма, Крим, Зелений мексиканець, Б-52", p:"700"},
+    {n:"Сет №2", d:"Дядя Ваня, Французький поцілунок, Єгермонстр, Б-52, Медуза, Хіросіма", p:"750"},
+    {n:"Сет №3", d:"Електроліт, БМВ, Скажена собака, Б-53, Хіросіма, Медуза", p:"850"},
+    {n:"Сет XXL", d:"Дядя Ваня, Крим, Зелений мексиканець, Єгермонстр, Французький поцілунок, БМВ, Б-52, Б-53, Електроліт, Скажена собака, Хіросіма, Медуза", p:"1600"},
+    {n:"Сет «Tequila»", d:"Текіла, сіль, лайм", p:"750"},
+    {n:"Коктейльна вежа (6 шт)", d:"PornStar Martini, Aperol Spritz, Coco Monkey, Pina Colada, Apple Tini Sour, Clover Club, Hugo, Tropical Sunrise, Malibu Sunset, Pear Garden", p:"від 1140"},
+  ]},
+  {id:"beer-cocktails", name:"Пивні коктейлі", items:[
+    {n:"Mrs. Cherry", d:"Пиво нефільтроване, вишневий сік, сироп вишні", p:"130"},
+    {n:"Banana Boom", d:"Пиво нефільтроване, банановий сік, сироп барбарису", p:"130"},
+    {n:"Peach Sunset", d:"Пиво нефільтроване, персиковий сік, сироп малини", p:"130"},
+    {n:"Citrus Boom", d:"Пиво нефільтроване, апельсиновий сік, сироп маракуї", p:"125"},
+    {n:"Sunrise Beer", d:"Пиво нефільтроване, апельсиновий сік, сироп гренадін", p:"135"},
+  ]},
+  {id:"beer", name:"Пиво", items:[
+    {n:"Пиво в асортименті (0,33л)", p:"80"},
+    {n:"Пляшкове пиво б/а (0,5л) — Carlsberg", p:"120"},
+  ]},
+  {id:"vodka", name:"Горілка · 50 мл", items:[
+    {n:"Nemiroff Delikat", p:"50"}, {n:"Nemiroff Original", p:"50"},
+    {n:"Koskenkorva Original", p:"80"},
+    {n:"Distil №9", p:"75"}, {n:"Distil №9 Цитрус", p:"75"}, {n:"Distil №9 Ваніль", p:"75"},
+    {n:"Distil №9 Солона карамель", p:"75"}, {n:"Distil №9 Журавлина", p:"75"},
+    {n:"Distil №9 Чорна смородина", p:"75"}, {n:"Distil №9 Грейпфрут", p:"75"},
+    {n:"Distil №9 Манго", p:"75"},
+  ]},
+  {id:"whisky", name:"Віскі · 50 мл", items:[
+    {n:"Bulleit Bourbon", p:"190"}, {n:"Glenlassie (5 year)", p:"145"},
+    {n:"Jack Daniel's", p:"180"}, {n:"Jack Daniel's Apple", p:"185"},
+    {n:"Jameson", p:"170"}, {n:"Jim Beam Bourbon", p:"160"}, {n:"Jim Beam Apple", p:"175"},
+    {n:"Jim Beam Honey", p:"175"}, {n:"Johnnie Walker «Red Label»", p:"135"},
+    {n:"Tullamore Dew", p:"165"}, {n:"Wild Turkey 101", p:"160"}, {n:"Monkey Shoulder", p:"300"},
+    {n:"Ballantine's", p:"125"}, {n:"Bell's", p:"110"},
+  ]},
+  {id:"tequila", name:"Текіла · 50 мл", items:[
+    {n:"Jarana Blanco", p:"130"}, {n:"Jarana Reposado", p:"140"},
+    {n:"Olmeca Silver", p:"175"}, {n:"El Destilador Reposado", p:"185"},
+  ]},
+  {id:"gin", name:"Джин · 50 мл", items:[
+    {n:"Bombay Sapphire", p:"185"}, {n:"Gordon's Premium Pink", p:"150"},
+    {n:"Gordon's Tropical Passionfruit", p:"150"}, {n:"Gordon's (37,5%)", p:"140"},
+  ]},
+  {id:"rum", name:"Ром · 50 мл", items:[
+    {n:"Bacardi Carta Negra", p:"115"}, {n:"Captain Morgan «White Rum»", p:"105"},
+    {n:"Captain Morgan «Black Spiced»", p:"130"}, {n:"Captain Morgan «Dark Rum»", p:"120"},
+    {n:"Captain Morgan «Original Spiced Gold»", p:"115"},
+    {n:"Oakheart", p:"110"},
+    {n:"Plantation Original Dark 40%", p:"130"}, {n:"Plantation Overproof 69%", p:"190"},
+  ]},
+  {id:"cognac-liqueur", name:"Коньяк · Лікери · Настійка", items:[
+    {n:"Old Kakheti (50мл)", p:"80"},
+    {n:"Baileys (50мл)", p:"190"}, {n:"Jagermeister (50мл)", p:"130"},
+    {n:"Jagermeister Orang (50мл)", p:"145"}, {n:"Sambuca Antica (50мл)", p:"85"},
+    {n:"Абсент Xenta (50мл)", p:"195"},
+  ]},
+  {id:"wine", name:"Вино · Ігристе", items:[
+    {n:"Kartuli Vazi «Цинандалі»", d:"Сухе, біле, Грузія · 100мл", p:"120"},
+    {n:"Kartuli Vazi «Алазанська долина»", d:"Н/солодке, біле, Грузія · 100мл", p:"120"},
+    {n:"Kartuli Vazi «Кіндзмараулі»", d:"Н/солодке, червоне, Грузія · 100мл", p:"160"},
+  ]},
+  {id:"bottles", name:"Пляшки · 0,5–0,75 л", items:[
+    {n:"Old Kakheti (коньяк, 0,5л)", p:"750"},
+    {n:"Nemiroff Delikat (0,5л)", p:"400"}, {n:"Nemiroff Original (0,5л)", p:"400"},
+    {n:"Distil №9 в асортименті (0,5л)", p:"700"}, {n:"Koskenkorva Original (0,5л)", p:"750"},
+    {n:"Captain Morgan «Original Spiced Gold» (0,5л)", p:"1000"}, {n:"Oakheart (0,5л)", p:"900"},
+    {n:"Jameson (0,5л)", p:"1600"}, {n:"Jim Beam (0,5л)", p:"1650"}, {n:"Bell's (0,5л)", p:"900"},
+    {n:"Fragolino «Fiorelli Bianco» (0,75л)", p:"600"}, {n:"Provetto «Spumante Bianco Brut» (0,75л)", p:"650"},
+  ]},
+]},
+
+soft: { label:"Безалкогольні напої", cats:[
+  {id:"coffee", name:"Кава", items:[
+    {n:"Еспресо", p:"50"}, {n:"Американо", p:"50"}, {n:"Американо з молоком", p:"55"},
+    {n:"Капучино", p:"65"}, {n:"Лате", p:"65"},
+  ]},
+  {id:"tea", name:"Чай", items:[
+    {n:"Чай заварний чорний", d:"0,3 / 0,8 л", p:"40 / 90"},
+    {n:"Чай заварний зелений", d:"0,3 / 0,8 л", p:"40 / 90"},
+  ]},
+  {id:"vitamin-tea", name:"Чай вітамінний · 0,3/0,9 л", items:[
+    {n:"Маракуя", p:"90 / 180"}, {n:"Смородина", p:"90 / 180"}, {n:"Обліпиха", p:"90 / 180"},
+    {n:"Вишня", p:"90 / 180"}, {n:"Малина", p:"90 / 180"}, {n:"Журавлина", p:"90 / 180"},
+    {n:"Імбирний", p:"90 / 180"},
+  ]},
+  {id:"cold-drinks", name:"Холодні напої", items:[
+    {n:"7 Up (0,33)", p:"70"},
+    {n:"Coca-Cola (0,25/0,33)", p:"80 / 70"}, {n:"Pepsi (0,33/0,75)", p:"70 / 90"},
+    {n:"Pepsi (1,25л)", p:"100"}, {n:"Coca-Cola (1,25)", p:"100"},
+    {n:"Спрайт (0,33/1,25)", p:"70 / 100"}, {n:"Фанта (0,33)", p:"70"},
+    {n:"Швепс (0,33/1)", p:"70 / 90"},
+    {n:"Сік в асортименті (0,25)", p:"65"}, {n:"Сік в асортименті (0,5/0,95)", p:"130 / 225"},
+    {n:"Burn в асортименті", p:"90"}, {n:"Моршинська (0,5)", p:"50"},
+  ]},
+  {id:"lemonades", name:"Лимонади · 0,22 л", items:[
+    {n:"Мохіто", p:"110"}, {n:"Мохіто (виноград/журавлина/малина/полуниця/вишня)", p:"110"},
+    {n:"Персик/апельсин", p:"110"}, {n:"Мультифрукт/гранат", p:"110"}, {n:"Дюшес", p:"110"},
+    {n:"Ананас/маракуя", p:"110"}, {n:"Кавун/полуниця", p:"110"}, {n:"Виноград/журавлина", p:"110"},
+    {n:"Тропік", p:"110"}, {n:"Маракуя/апельсин", p:"110"}, {n:"Яблуко/барбарис", p:"110"},
+    {n:"Персик/бузина", p:"110"}, {n:"Вишня/гранат", p:"110"},
+  ]},
+  {id:"mocktails", name:"Безалкогольні коктейлі", items:[
+    {n:"Citrus", d:"Апельсиновий сік, лимонний сік, сироп персик, сироп гренадин, содова", p:"100"},
+    {n:"Banana Colada", d:"Ананасовий сік, банановий сік, кокосовий сироп", p:"120"},
+    {n:"Blue Lagoon", d:"Ананасовий сік, лимонний сік, сироп блю кюрасао, спрайт", p:"100"},
+    {n:"Espresso Tonic", d:"Тонік, еспресо", p:"95"},
+    {n:"Orange Coffee", d:"Апельсиновий сік, еспресо", p:"95"},
+  ]},
+]},
+};
+
+/* ================= RENDER ================= */
+const tabsEl = document.getElementById('tabs');
+const catnavEl = document.getElementById('catnav');
+const mainEl = document.getElementById('main');
+const tabKeys = ['bar', 'soft', 'kitchen'];
+let activeTab = tabKeys[0];
+
+/* ---- cart ---- */
+const cart = {};          // id -> qty
+const itemsById = {};     // id -> {name, price, priceLabel}
+
+function parsePrice(p){
+  const m = String(p).replace(',', '.').match(/[\d.]+/);
+  return m ? parseFloat(m[0]) : 0;
+}
+
+function buildItemsById(){
+  tabKeys.forEach(k=>{
+    DATA[k].cats.forEach(c=>{
+      c.items.forEach((it, j)=>{
+        const id = k + '-' + c.id + '-' + j;
+        it._id = id;
+        itemsById[id] = { name: it.n, price: parsePrice(it.p), priceLabel: it.p };
+      });
+    });
+  });
+}
+buildItemsById();
+
+function renderTabs(){
+  tabsEl.innerHTML = tabKeys.map(k =>
+    `<button class="tab-btn${k===activeTab?' active':''}" data-tab="${k}">${DATA[k].label}</button>`
+  ).join('');
+}
+
+function renderCatnav(){
+  const cats = DATA[activeTab].cats;
+  catnavEl.innerHTML = cats.map((c,i)=>
+    `<button class="cat-pill${i===0?' active':''}" data-target="${c.id}">${c.name}</button>`
+  ).join('');
+}
+
+function priceHtml(p){ return p; }
+
+function controlHtml(id){
+  const qty = cart[id] || 0;
+  if(qty > 0){
+    return `<div class="stepper"><button class="qty-minus" data-id="${id}">−</button><span class="qty mono">${qty}</span><button class="qty-plus" data-id="${id}">+</button></div>`;
+  }
+  return `<button class="add-btn" data-id="${id}">+</button>`;
+}
+
+function renderMain(){
+  const cats = DATA[activeTab].cats;
+  mainEl.innerHTML = cats.map(c => `
+    <section class="cat" id="${c.id}">
+      <h2 class="display">${c.name}</h2>
+      <div class="cat-count mono">${c.items.length} позицій</div>
+      <div class="cat-divider"></div>
+      <div class="grid">
+        ${c.items.map(it => `
+          <article class="item" data-name="${(it.n+' '+(it.d||'')).toLowerCase()}">
+            <div class="item-top">
+              <div class="item-name">${it.n}</div>
+              <div class="item-price mono">${priceHtml(it.p)}</div>
+            </div>
+            ${it.d ? `<div class="item-desc">${it.d}</div>` : ``}
+            <div class="item-controls" data-id="${it._id}">${controlHtml(it._id)}</div>
+          </article>
+        `).join('')}
+      </div>
+    </section>
+  `).join('') + `<div class="empty-state" id="emptyState" style="display:none">Нічого не знайдено — спробуйте інший запит</div>`;
+
+  attachGlassGlow();
+  attachReveal();
+}
+
+function switchTab(key){
+  activeTab = key;
+  renderTabs(); renderCatnav(); renderMain();
+  renderBlobs(activeTab);
+  bindTabEvents(); bindCatnavEvents();
+  window.scrollTo({top: document.getElementById('main').offsetTop - 130, behavior:'smooth'});
+}
+
+function bindTabEvents(){
+  tabsEl.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.onclick = ()=> switchTab(btn.dataset.tab);
+  });
+}
+function bindCatnavEvents(){
+  catnavEl.querySelectorAll('.cat-pill').forEach(btn=>{
+    btn.onclick = ()=>{
+      const target = document.getElementById(btn.dataset.target);
+      if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); }
+    };
+  });
+}
+
+/* liquid glass cursor glow */
+function attachGlassGlow(){
+  document.querySelectorAll('.glass').forEach(el=>{
+    el.addEventListener('mousemove', e=>{
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
+      el.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
+    });
+  });
+}
+
+/* scroll reveal */
+let observer;
+function attachReveal(){
+  if(observer) observer.disconnect();
+  observer = new IntersectionObserver((entries)=>{
+    entries.forEach((e,i)=>{
+      if(e.isIntersecting){
+        setTimeout(()=> e.target.classList.add('in-view'), (i%6)*60);
+        observer.unobserve(e.target);
+      }
+    });
+  }, {threshold:.12});
+  document.querySelectorAll('.item').forEach(el=> observer.observe(el));
+}
+
+/* active category highlight on scroll */
+const catObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id = e.target.id;
+      catnavEl.querySelectorAll('.cat-pill').forEach(p=>{
+        p.classList.toggle('active', p.dataset.target===id);
+      });
+    }
+  });
+}, {rootMargin:"-40% 0px -50% 0px"});
+
+function observeCats(){
+  document.querySelectorAll('section.cat').forEach(s=> catObserver.observe(s));
+}
+const oldRenderMain = renderMain;
+renderMain = function(){ oldRenderMain(); observeCats(); };
+
+/* ---- cart operations ---- */
+function updateControlUI(id){
+  const el = document.querySelector(`.item-controls[data-id="${id}"]`);
+  if(el) el.innerHTML = controlHtml(id);
+}
+
+function pulseFab(){
+  const fab = document.getElementById('cartFab');
+  fab.classList.remove('pulse'); void fab.offsetWidth; fab.classList.add('pulse');
+}
+
+function addToCart(id){
+  cart[id] = (cart[id] || 0) + 1;
+  updateControlUI(id);
+  renderCart();
+  pulseFab();
+}
+function removeOneFromCart(id){
+  if(!cart[id]) return;
+  cart[id] -= 1;
+  if(cart[id] <= 0) delete cart[id];
+  updateControlUI(id);
+  renderCart();
+}
+function removeItemFully(id){
+  delete cart[id];
+  updateControlUI(id);
+  renderCart();
+}
+function clearCart(){
+  Object.keys(cart).forEach(id => delete cart[id]);
+  document.querySelectorAll('.item-controls').forEach(el => updateControlUI(el.dataset.id));
+  renderCart();
+}
+
+function renderCart(){
+  const ids = Object.keys(cart);
+  const totalQty = ids.reduce((s,id)=> s + cart[id], 0);
+  document.querySelector('#cartFab .badge').textContent = totalQty;
+
+  const listEl = document.getElementById('cartItems');
+  const totalEl = document.getElementById('cartTotalValue');
+
+  if(ids.length === 0){
+    listEl.innerHTML = `<div class="cart-empty">Кошик порожній<br>Додайте позиції з меню</div>`;
+    totalEl.textContent = '0 ₴';
+    return;
+  }
+  let sum = 0;
+  listEl.innerHTML = ids.map(id=>{
+    const it = itemsById[id];
+    const qty = cart[id];
+    const lineTotal = Math.round(it.price * qty);
+    sum += lineTotal;
+    return `
+      <div class="cart-row">
+        <div class="cart-row-info">
+          <div class="cart-row-name">${it.name}</div>
+          <div class="cart-row-price mono">${it.priceLabel} × ${qty} = ${lineTotal} ₴</div>
+        </div>
+        <div class="cart-row-actions">
+          <div class="stepper"><button class="qty-minus" data-id="${id}">−</button><span class="qty mono">${qty}</span><button class="qty-plus" data-id="${id}">+</button></div>
+          <button class="cart-remove" data-id="${id}">Прибрати</button>
+        </div>
+      </div>`;
+  }).join('');
+  totalEl.textContent = sum + ' ₴';
+}
+
+/* delegated clicks for add/qty/remove, works across menu grid and cart panel */
+document.addEventListener('click', (e)=>{
+  const addBtn = e.target.closest('.add-btn');
+  if(addBtn){ addToCart(addBtn.dataset.id); return; }
+  const plusBtn = e.target.closest('.qty-plus');
+  if(plusBtn){ addToCart(plusBtn.dataset.id); return; }
+  const minusBtn = e.target.closest('.qty-minus');
+  if(minusBtn){ removeOneFromCart(minusBtn.dataset.id); return; }
+  const rmBtn = e.target.closest('.cart-remove');
+  if(rmBtn){ removeItemFully(rmBtn.dataset.id); return; }
+});
+
+/* cart panel open/close */
+const cartFab = document.getElementById('cartFab');
+const cartOverlay = document.getElementById('cartOverlay');
+const cartPanel = document.getElementById('cartPanel');
+function openCart(){ cartOverlay.classList.add('open'); cartPanel.classList.add('open'); }
+function closeCart(){ cartOverlay.classList.remove('open'); cartPanel.classList.remove('open'); }
+cartFab.addEventListener('click', openCart);
+document.getElementById('cartClose').addEventListener('click', closeCart);
+cartOverlay.addEventListener('click', closeCart);
+document.getElementById('cartClearBtn').addEventListener('click', clearCart);
+renderCart();
+
+/* ---- liquid blobs: randomized per-section scroll motion ---- */
+const BLOB_SETS = {
+  bar: [
+    {top:'-6vw',  left:'-4vw',  size:'36vw', wob:'wob1', ax:80,  ay:100, fx:.0021, fy:.0015, ph:0.3},
+    {top:'8vh',   right:'-6vw', size:'24vw', wob:'wob2', ax:60,  ay:70,  fx:.0028, fy:.0019, ph:1.4},
+    {bottom:'-8vh', left:'22vw', size:'28vw', wob:'wob3', ax:70,  ay:85,  fx:.0017, fy:.0025, ph:2.1},
+    {bottom:'4vh',  right:'10vw', size:'16vw', wob:'wob1', ax:40, ay:55,  fx:.0033, fy:.0022, ph:0.8},
+  ],
+  soft: [
+    {top:'-4vw', right:'-2vw', size:'30vw', wob:'wob2', ax:65, ay:90, fx:.0024, fy:.0016, ph:0.6},
+    {top:'22vh', left:'-8vw',  size:'22vw', wob:'wob1', ax:50, ay:60, fx:.0015, fy:.0027, ph:1.9},
+    {bottom:'-6vh', right:'18vw', size:'26vw', wob:'wob3', ax:75, ay:65, fx:.0026, fy:.0018, ph:2.6},
+  ],
+  kitchen: [
+    {top:'2vh',   left:'8vw',  size:'20vw', wob:'wob1', ax:45, ay:70, fx:.0019, fy:.0023, ph:0.2},
+    {top:'-8vw',  right:'6vw', size:'34vw', wob:'wob2', ax:85, ay:75, fx:.0023, fy:.0014, ph:1.1},
+    {bottom:'-10vh', left:'34vw', size:'30vw', wob:'wob3', ax:60, ay:90, fx:.0016, fy:.0029, ph:2.9},
+    {bottom:'10vh',  right:'-4vw', size:'18vw', wob:'wob1', ax:35, ay:45, fx:.0034, fy:.002,  ph:1.6},
+  ],
+};
+
+function renderBlobs(tabKey){
+  const container = document.getElementById('blobs');
+  const set = BLOB_SETS[tabKey] || BLOB_SETS.bar;
+  container.innerHTML = set.map(b=>{
+    const pos = Object.entries(b)
+      .filter(([k]) => ['top','left','right','bottom'].includes(k))
+      .map(([k,v]) => `${k}:${v}`).join(';');
+    return `<div class="blob-wrap" data-ax="${b.ax}" data-ay="${b.ay}" data-fx="${b.fx}" data-fy="${b.fy}" data-ph="${b.ph}">
+      <div class="blob ${b.wob}" style="${pos};width:${b.size};height:${b.size};"></div>
+    </div>`;
+  }).join('');
+  updateBlobs();
+}
+
+function updateBlobs(){
+  const sy = window.scrollY;
+  document.querySelectorAll('.blob-wrap').forEach(w=>{
+    const ax = +w.dataset.ax, ay = +w.dataset.ay, fx = +w.dataset.fx, fy = +w.dataset.fy, ph = +w.dataset.ph;
+    const dx = Math.sin(sy * fx + ph) * ax;
+    const dy = Math.cos(sy * fy + ph * 1.37) * ay;
+    w.style.transform = `translate(${dx}px, ${dy}px)`;
+  });
+}
+let blobTicking = false;
+function onBlobScroll(){
+  if(blobTicking) return;
+  blobTicking = true;
+  requestAnimationFrame(()=>{ updateBlobs(); blobTicking = false; });
+}
+window.addEventListener('scroll', onBlobScroll, {passive:true});
+renderBlobs(activeTab);
+
+/* scroll cta + top button */
+document.getElementById('scrollCta').onclick = ()=>{
+  document.getElementById('main').scrollIntoView({behavior:'smooth'});
+};
+const topBtn = document.getElementById('topBtn');
+window.addEventListener('scroll', ()=>{
+  topBtn.classList.toggle('show', window.scrollY > 700);
+});
+topBtn.onclick = ()=> window.scrollTo({top:0, behavior:'smooth'});
+
+/* init */
+renderTabs(); renderCatnav(); renderMain();
+bindTabEvents(); bindCatnavEvents();
+</script>
+</body>
+</html>
